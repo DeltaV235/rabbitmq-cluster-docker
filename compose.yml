@@ -1,14 +1,14 @@
-version: '3'
 services:
   rabbitmq1:
-    image: rabbitmq:3-management
+    image: rabbitmq:3.13-management
     hostname: rabbitmq1
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
       - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}
+      - RABBITMQ_ERLANG_COOKIE=${RABBITMQ_ERLANG_COOKIE}
     volumes:
-      - ${PWD}/.erlang.cookie:/var/lib/rabbitmq/.erlang.cookie
+      # - ${PWD}/.erlang.cookie:/var/lib/rabbitmq/.erlang.cookie
       - ${PWD}/cluster-entrypoint.sh:/usr/local/bin/cluster-entrypoint.sh
       - rabbitmq1-data:/var/lib/rabbitmq/
       - rabbitmq1-logs:/var/log/rabbitmq
@@ -17,14 +17,15 @@ services:
       - rabbitmq
 
   rabbitmq2:
-    image: rabbitmq:3-management
+    image: rabbitmq:3.13-management
     hostname: rabbitmq2
     depends_on:
       - rabbitmq1
     environment:
       - JOIN_CLUSTER_HOST=rabbitmq1
+      - RABBITMQ_ERLANG_COOKIE=${RABBITMQ_ERLANG_COOKIE}
     volumes:
-      - ${PWD}/.erlang.cookie:/var/lib/rabbitmq/.erlang.cookie
+      # - ${PWD}/.erlang.cookie:/var/lib/rabbitmq/.erlang.cookie
       - ${PWD}/cluster-entrypoint.sh:/usr/local/bin/cluster-entrypoint.sh
       - rabbitmq2-data:/var/lib/rabbitmq/
       - rabbitmq2-logs:/var/log/rabbitmq
@@ -33,14 +34,15 @@ services:
       - rabbitmq
 
   rabbitmq3:
-    image: rabbitmq:3-management
+    image: rabbitmq:3.13-management
     hostname: rabbitmq3
     depends_on:
       - rabbitmq1
     environment:
       - JOIN_CLUSTER_HOST=rabbitmq1
+      - RABBITMQ_ERLANG_COOKIE=${RABBITMQ_ERLANG_COOKIE}
     volumes:
-      - ${PWD}/.erlang.cookie:/var/lib/rabbitmq/.erlang.cookie
+      # - ${PWD}/.erlang.cookie:/var/lib/rabbitmq/.erlang.cookie
       - ${PWD}/cluster-entrypoint.sh:/usr/local/bin/cluster-entrypoint.sh
       - rabbitmq3-data:/var/lib/rabbitmq/
       - rabbitmq3-logs:/var/log/rabbitmq
